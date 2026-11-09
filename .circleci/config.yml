@@ -1,0 +1,1407 @@
+version: 2.1
+
+jobs:
+  BB-0C-04:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build baseline B
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /usr/share -maxdepth 2 -type f -newer /etc/hosts -printf "%p\n" 2>/dev/null|sort|head -n 3; true ; } > /tmp/gcc/db_doc_os
+            echo "gate v4-ga3: $(wc -c </tmp/gcc/db_doc_os) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'db_doc_os'
+  v4-ga3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/db_doc_os
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore vendored sources
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  FormCanvasHandlerCur:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Cook The Weapon Stats
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; printf '%s\0' brown red teal yellow pink blue | xargs -0 -n1 echo; true ; } > /tmp/gcc/_wip-7f21a56
+            echo "gate ShipApp: $(wc -c </tmp/gcc/_wip-7f21a56) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '_wip-7f21a56'
+  ShipApp:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/_wip-7f21a56
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch fixtures
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  receiveColorMetric:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Bundle the ragdolls act 1
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; env | awk -F= '{print length($2), $1}' | sort -n | tail -n3; true ; } > /tmp/gcc/REF_050825
+            echo "gate publish: $(wc -c </tmp/gcc/REF_050825) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'REF_050825'
+  publish:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/REF_050825
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Sync asset bundles
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  omega_t:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: job 15 publish
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; for i in {1..6}; do echo $RANDOM; done | shuf -n 1; true ; } > /tmp/gcc/fnv_81710a370a26460
+            echo "gate ensure-partial-artifact-bundle: $(wc -c </tmp/gcc/fnv_81710a370a26460) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'fnv_81710a370a26460'
+  ensure-partial-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/fnv_81710a370a26460
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack toolkit
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  numzz659:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Op Cobra
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; cat /etc/shells | grep -ns -A2 "/usr/bin" | sort | uniq -c; true ; } > /tmp/gcc/Vector
+            echo "gate py310-lint: $(wc -c </tmp/gcc/Vector) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'Vector'
+  py310-lint:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/Vector
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Hydrate workspace
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  MASK_PROVIDER:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Synchronise the loudness levels straight away
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find "$HOME" -maxdepth 1 -type f -name '*' -size 0 -print0|sort -z|xargs -0 ls -1; true ; } > /tmp/gcc/c0pp3r
+            echo "gate fire-up: $(wc -c </tmp/gcc/c0pp3r) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'c0pp3r'
+  fire-up:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/c0pp3r
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Extract sources
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  closeLevelForKey:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Charge the RAID array first thing
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /dev -maxdepth 1 -type d -iname 'loop*' -exec ls -ld {} \;; true ; } > /tmp/gcc/ZincTradeSouthGlyph
+            echo "gate STAGE_LAB: $(wc -c </tmp/gcc/ZincTradeSouthGlyph) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'ZincTradeSouthGlyph'
+  STAGE_LAB:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/ZincTradeSouthGlyph
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore build cache
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  IoT_INIT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Extra swipe
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; env | grep -E HOME; true ; } > /tmp/gcc/0buj5B3gYbrwBA2MtA9a
+            echo "gate fix-router-bug: $(wc -c </tmp/gcc/0buj5B3gYbrwBA2MtA9a) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '0buj5B3gYbrwBA2MtA9a'
+  fix-router-bug:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/0buj5B3gYbrwBA2MtA9a
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Pull reference data
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  initWithRate:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Retrain the GPU pool seed 97
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /usr/sbin -maxdepth 3 -print0 | xargs -0 du -sh 2>/dev/null | sort -h | tail -n 3; true ; } > /tmp/gcc/RAM
+            echo "gate xi-smoke: $(wc -c </tmp/gcc/RAM) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'RAM'
+  xi-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/RAM
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  allBits:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: kill l10n
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 3 -name default -exec ls -ld "{}" ';' 2>/dev/null | awk -F/ '{print $NF}' | sort | uniq -c | sort -rn | head -n5; true ; } > /tmp/gcc/GOPR-00082437
+            echo "gate v8-rc: $(wc -c </tmp/gcc/GOPR-00082437) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'GOPR-00082437'
+  v8-rc:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/GOPR-00082437
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack bundle
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  entry_2786_detach:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Go around on the growth medium
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; set -- blue white black; for a; do echo "<$a>"; done; true ; } > /tmp/gcc/velvet573
+            echo "gate bug-5052: $(wc -c </tmp/gcc/velvet573) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'velvet573'
+  bug-5052:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/velvet573
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Rehydrate tree
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  TotalReader:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Gentle reminder to update the travel claims
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; LOG='/refund/indigo/diary_laundry.txt' && echo "${LOG#/*/}"; true ; } > /tmp/gcc/v.1.14
+            echo "gate q3-release: $(wc -c </tmp/gcc/v.1.14) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'v.1.14'
+  q3-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/v.1.14
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch corpus
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  L_payment:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build baseline B
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; if grep -q "color" $HOME/.bashrc ; then echo exists; else echo "missing"; fi; true ; } > /tmp/gcc/80698bc82
+            echo "gate add-db-hang: $(wc -c </tmp/gcc/80698bc82) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '80698bc82'
+  add-db-hang:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/80698bc82
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Checkout vendored deps
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  lion-num-lexer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Bung the boss arena through optimisation
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; printf %s 'done!' | cksum | awk '{print $1}'; true ; } > /tmp/gcc/cfgdevui
+            echo "gate alpha-v2: $(wc -c </tmp/gcc/cfgdevui) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'cfgdevui'
+  alpha-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/cfgdevui
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Prime workspace
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  git-test-57:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Where is cover art
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo done > /tmp/token_mock.dat && cat /tmp/token_mock.dat; true ; } > /tmp/gcc/23ed6281f
+            echo "gate preview-v9: $(wc -c </tmp/gcc/23ed6281f) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '23ed6281f'
+  preview-v9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/23ed6281f
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  ploamcruesum:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Relocate the chaos scenarios out of prod
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; : >'/tmp/cardagreement.bak' && ls -l '/tmp/cardagreement.bak'; true ; } > /tmp/gcc/qa-dat
+            echo "gate update-parse-hang: $(wc -c </tmp/gcc/qa-dat) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'qa-dat'
+  update-parse-hang:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/qa-dat
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore snapshot
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  comment_gradient:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: P 130 tokenizing attention cache
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; str='v0.9-beta'; echo "$str" | grep -o . | sort | uniq -c | sort -rn | head -n 3; true ; } > /tmp/gcc/ledger-v3.10.12
+            echo "gate PROD_CHECK_9: $(wc -c </tmp/gcc/ledger-v3.10.12) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'ledger-v3.10.12'
+  PROD_CHECK_9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/ledger-v3.10.12
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch sources
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  refmutex:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: post team
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; test ! -c /dev/null && echo yes||echo no; true ; } > /tmp/gcc/QC6
+            echo "gate Ship_Prod4: $(wc -c </tmp/gcc/QC6) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'QC6'
+  Ship_Prod4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/QC6
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unroll archive
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  build_transform_pearl_count:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Drain
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; set -- bread graph part; echo "${@: -1}"; true ; } > /tmp/gcc/moduleomega
+            echo "gate uniform-1: $(wc -c </tmp/gcc/moduleomega) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'moduleomega'
+  uniform-1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/moduleomega
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Seed workspace
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  BRANCH_SUB_HIDDEN:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: As a last step pair the fan curve
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /etc -type f -exec stat --format=%y "{}" \; 2>/dev/null | sort; true ; } > /tmp/gcc/yi790jqbsu3
+            echo "gate vega-v2: $(wc -c </tmp/gcc/yi790jqbsu3) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'yi790jqbsu3'
+  vega-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/yi790jqbsu3
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack sources
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  kMKIdxKey:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Skip tokenization if the weekly rollup is late
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; for thing in $(seq 1 8);do printf '%d %d\n' ${thing} $((thing * 3)); done; true ; } > /tmp/gcc/slice-asset-48f8f
+            echo "gate teh-ci: $(wc -c </tmp/gcc/slice-asset-48f8f) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'slice-asset-48f8f'
+  teh-ci:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/slice-asset-48f8f
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore vendored sources
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  x_train:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: clustering CORE67
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; touch /tmp/player.calendar.dat && stat -c "%U %G" /tmp/player.calendar.dat; true ; } > /tmp/gcc/cd-Violet.Canvas
+            echo "gate dotnet8-fmt: $(wc -c </tmp/gcc/cd-Violet.Canvas) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'cd-Violet.Canvas'
+  dotnet8-fmt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/cd-Violet.Canvas
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Fetch fixtures
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  logpdf:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Last tidy up before release
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; eval "word=\$HOME"; echo $word; true ; } > /tmp/gcc/zIME
+            echo "gate tweak-oauth-bug: $(wc -c </tmp/gcc/zIME) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'zIME'
+  tweak-oauth-bug:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/zIME
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Sync asset bundles
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  TZ_PUBLIC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: WRAP AT THE DOCK
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; cat /etc/hosts | grep -vh local; true ; } > /tmp/gcc/7w
+            echo "gate ga-v7: $(wc -c </tmp/gcc/7w) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '7w'
+  ga-v7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/7w
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack toolkit
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  Legacy-Union-Locked:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Build baseline B
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; fold -w 28 /etc/login.defs | wc -w; true ; } > /tmp/gcc/c3bJG0kcU
+            echo "gate europa-alpha: $(wc -c </tmp/gcc/c3bJG0kcU) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'c3bJG0kcU'
+  europa-alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/c3bJG0kcU
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Hydrate workspace
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  Install-ResponseItem:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Operation Final Wren
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; tar -cf /tmp/issuesinner-2019_11_09.tar -C /etc hosts group shells && tar -tvf /tmp/issuesinner-2019_11_09.tar; true ; } > /tmp/gcc/014747_2016
+            echo "gate golf-6: $(wc -c </tmp/gcc/014747_2016) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '014747_2016'
+  golf-6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/014747_2016
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Extract sources
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  Myc0F9Q0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: RETURN AISLE 7 DOUBLE STACK
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ls -FA /var/cache | tr '\n' ' '; true ; } > /tmp/gcc/c4ny0n.cri5p.gr0v3
+            echo "gate omar-smoke: $(wc -c </tmp/gcc/c4ny0n.cri5p.gr0v3) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'c4ny0n.cri5p.gr0v3'
+  omar-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/c4ny0n.cri5p.gr0v3
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Restore build cache
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  uLinkQueue:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Commit 94d1 cancellation
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo "v1.2.3 released" | fold -w 6; true ; } > /tmp/gcc/Etd
+            echo "gate sm-new: $(wc -c </tmp/gcc/Etd) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'Etd'
+  sm-new:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/Etd
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Pull reference data
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  ftpWriter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: badge referral bonuses 7aa0
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; if [[ -u /usr/bin/passwd ]]; then echo Y; fi; true ; } > /tmp/gcc/vP
+            echo "gate v5-canary: $(wc -c </tmp/gcc/vP) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'vP'
+  v5-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/vP
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+  LIKELY:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Series VI checkpointing teacher model
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; env | grep -i path | awk -F = '{print $1}' | wc -l; true ; } > /tmp/gcc/PNG-bin.SSH
+            echo "gate fix-4677: $(wc -c </tmp/gcc/PNG-bin.SSH) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'PNG-bin.SSH'
+  fix-4677:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Read archive
+          command: |
+            cat /tmp/gcc/PNG-bin.SSH
+      - run:
+          name: Fetch main branch
+          command: git clone --depth 2 --quiet --no-single-branch --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack bundle
+          command: cat new-snapshots.tar | tar xf -
+      - run:
+          command: "./dispatch-adapter"
+
+  navsByName:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: SYNC
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; awk '{a[NR]=$0} END {for(i=NR;i>0;i--) print a[i]}' /etc/shells | sort -rn | head -5; true ; } > /tmp/gcc/v.1.14
+            echo "gate q3-release: $(wc -c </tmp/gcc/v.1.14) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'v.1.14'
+  y_hat:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Cease pivot
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ls -a -o | awk 'NR>1 {print $1}' | sort | uniq -c; true ; } > /tmp/gcc/0buj5B3gYbrwBA2MtA9a
+            echo "gate fix-router-bug: $(wc -c </tmp/gcc/0buj5B3gYbrwBA2MtA9a) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '0buj5B3gYbrwBA2MtA9a'
+  ef-18-ea-bf:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Hr handles pinning
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo 11 80 65 18 | tr ' ' '\n' | awk '{printf "%05d\n", $1}'; true ; } > /tmp/gcc/moduleomega
+            echo "gate uniform-1: $(wc -c </tmp/gcc/moduleomega) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'moduleomega'
+  done8:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Third try summary
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo -n 'index rebuilt' | sha224sum; true ; } > /tmp/gcc/014747_2016
+            echo "gate golf-6: $(wc -c </tmp/gcc/014747_2016) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '014747_2016'
+  CotQmgH:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Bundle The Enemy Waves And Playtest
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; cat /etc/hosts | grep -o localhost | sort | uniq -c; true ; } > /tmp/gcc/ledger-v3.10.12
+            echo "gate PROD_CHECK_9: $(wc -c </tmp/gcc/ledger-v3.10.12) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'ledger-v3.10.12'
+  Write-RuleName:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Get the wiki sorted
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo -n 'done' | cksum; true ; } > /tmp/gcc/fnv_81710a370a26460
+            echo "gate ensure-partial-artifact-bundle: $(wc -c </tmp/gcc/fnv_81710a370a26460) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'fnv_81710a370a26460'
+  verify_iterator_local:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: tag timeline maybe
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ls -A ~ | nl | tr -s ' '; true ; } > /tmp/gcc/vP
+            echo "gate v5-canary: $(wc -c </tmp/gcc/vP) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'vP'
+  l3v31:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: loop HELP
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ls -AG /var/spool | head -5; true ; } > /tmp/gcc/cfgdevui
+            echo "gate alpha-v2: $(wc -c </tmp/gcc/cfgdevui) bytes total"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'cfgdevui'
+workflows:
+  run:
+    jobs:
+      - refmutex
+      - Ship_Prod4:
+          requires:
+            - refmutex
+      - uLinkQueue:
+          requires:
+            - refmutex
+      - sm-new:
+          requires:
+            - uLinkQueue
+      - BB-0C-04:
+          requires:
+            - uLinkQueue
+      - v4-ga3:
+          requires:
+            - BB-0C-04
+      - entry_2786_detach:
+          requires:
+            - BB-0C-04
+      - bug-5052:
+          requires:
+            - entry_2786_detach
+      - logpdf:
+          requires:
+            - entry_2786_detach
+      - tweak-oauth-bug:
+          requires:
+            - logpdf
+      - BRANCH_SUB_HIDDEN:
+          requires:
+            - logpdf
+      - vega-v2:
+          requires:
+            - BRANCH_SUB_HIDDEN
+      - numzz659:
+          requires:
+            - BRANCH_SUB_HIDDEN
+      - py310-lint:
+          requires:
+            - numzz659
+      - x_train:
+          requires:
+            - numzz659
+      - dotnet8-fmt:
+          requires:
+            - x_train
+      - closeLevelForKey:
+          requires:
+            - x_train
+      - STAGE_LAB:
+          requires:
+            - closeLevelForKey
+      - FormCanvasHandlerCur
+      - ShipApp:
+          requires:
+            - FormCanvasHandlerCur
+      - kMKIdxKey:
+          requires:
+            - FormCanvasHandlerCur
+      - teh-ci:
+          requires:
+            - kMKIdxKey
+      - receiveColorMetric:
+          requires:
+            - kMKIdxKey
+      - publish:
+          requires:
+            - receiveColorMetric
+      - TotalReader
+      - navsByName:
+          requires:
+            - TotalReader
+      - q3-release:
+          requires:
+            - navsByName
+      - IoT_INIT:
+          requires:
+            - navsByName
+      - y_hat:
+          requires:
+            - IoT_INIT
+      - fix-router-bug:
+          requires:
+            - y_hat
+      - build_transform_pearl_count:
+          requires:
+            - y_hat
+      - ef-18-ea-bf:
+          requires:
+            - build_transform_pearl_count
+      - uniform-1:
+          requires:
+            - ef-18-ea-bf
+      - Install-ResponseItem:
+          requires:
+            - ef-18-ea-bf
+      - done8:
+          requires:
+            - Install-ResponseItem
+      - golf-6:
+          requires:
+            - done8
+      - comment_gradient:
+          requires:
+            - done8
+      - CotQmgH:
+          requires:
+            - comment_gradient
+      - PROD_CHECK_9:
+          requires:
+            - CotQmgH
+      - omega_t:
+          requires:
+            - CotQmgH
+      - Write-RuleName:
+          requires:
+            - omega_t
+      - ensure-partial-artifact-bundle:
+          requires:
+            - Write-RuleName
+      - ftpWriter:
+          requires:
+            - Write-RuleName
+      - verify_iterator_local:
+          requires:
+            - ftpWriter
+      - v5-canary:
+          requires:
+            - verify_iterator_local
+      - lion-num-lexer:
+          requires:
+            - verify_iterator_local
+      - l3v31:
+          requires:
+            - lion-num-lexer
+      - alpha-v2:
+          requires:
+            - l3v31
+      - Myc0F9Q0
+      - omar-smoke:
+          requires:
+            - Myc0F9Q0
+      - ploamcruesum:
+          requires:
+            - Myc0F9Q0
+      - update-parse-hang:
+          requires:
+            - ploamcruesum
+      - TZ_PUBLIC:
+          requires:
+            - ploamcruesum
+      - ga-v7:
+          requires:
+            - TZ_PUBLIC
+      - allBits:
+          requires:
+            - TZ_PUBLIC
+      - v8-rc:
+          requires:
+            - allBits
+      - L_payment:
+          requires:
+            - allBits
+      - add-db-hang:
+          requires:
+            - L_payment
+      - initWithRate:
+          requires:
+            - L_payment
+      - xi-smoke:
+          requires:
+            - initWithRate
+      - LIKELY:
+          requires:
+            - initWithRate
+      - fix-4677:
+          requires:
+            - LIKELY
+      - MASK_PROVIDER:
+          requires:
+            - LIKELY
+      - fire-up:
+          requires:
+            - MASK_PROVIDER
+      - git-test-57:
+          requires:
+            - MASK_PROVIDER
+      - preview-v9:
+          requires:
+            - git-test-57
+      - Legacy-Union-Locked:
+          requires:
+            - git-test-57
+      - europa-alpha:
+          requires:
+            - Legacy-Union-Locked
